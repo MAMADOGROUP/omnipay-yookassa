@@ -17,6 +17,7 @@ use Omnipay\YooKassa\Message\CaptureResponse;
 use Omnipay\YooKassa\Message\DetailsRequest;
 use Omnipay\YooKassa\Message\DetailsResponse;
 use Omnipay\YooKassa\Message\IncomingNotificationRequest;
+use Omnipay\YooKassa\Message\NotificationRequest;
 use Omnipay\YooKassa\Message\PurchaseRequest;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use YooKassa\Client;
@@ -105,6 +106,15 @@ class Gateway extends AbstractGateway
     public function notification(array $parameters = [])
     {
         return $this->createRequest(IncomingNotificationRequest::class, $this->injectYooKassaClient($parameters));
+    }
+
+    /**
+     * @param array $parameters
+     * @return CaptureResponse|\Omnipay\Common\Message\AbstractRequest
+     */
+    public function acceptNotification(array $parameters = [])
+    {
+        return $this->createRequest(NotificationRequest::class, $this->injectYooKassaClient($parameters));
     }
 
     private function injectYooKassaClient(array $parameters): array
