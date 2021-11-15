@@ -10,6 +10,7 @@
 
 namespace Omnipay\YooKassa\Message;
 
+use Omnipay\Common\PaymentInterface;
 use YooKassa\Client;
 
 /**
@@ -44,8 +45,37 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('secret', $value);
     }
 
+    public function getTransfers()
+    {
+        return $this->getParameter('transfers');
+    }
+
+    public function setTransfers($value)
+    {
+        return $this->setParameter('transfers', $value);
+    }
+
     public function setYooKassaClient(Client $client): void
     {
         $this->client = $client;
+    }
+
+    /**
+     * @param PaymentInterface $payment
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function injectPayment(PaymentInterface $payment)
+    {
+        $this
+            ->setPayment($payment)
+            ->setAmount($payment->getAmount())
+            ->setCurrency($payment->getCurrency())
+            ->setDescription($payment->getDescription())
+            ->setReturnUrl($payment->getReturnUrl())
+            ->setTransactionId($payment->getTransactionId())
+            ->setTransactionReference($payment->getTransactionReference())
+            ->setTransfers($payment->getTransfers());
+
+        return $this;
     }
 }

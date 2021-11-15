@@ -11,7 +11,6 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     public function isValid(): bool
     {
         $ranges = [
-            '172.20.0.1/1', // TODO delete
             '185.71.76.0/27',
             '185.71.77.0/27',
             '77.75.153.0/25',

@@ -22,7 +22,7 @@ class PurchaseRequest extends AbstractRequest
 {
     public function getData()
     {
-        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description');
+        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description', 'transfers');
 
         return [
             'amount' => $this->getAmount(),
@@ -30,6 +30,7 @@ class PurchaseRequest extends AbstractRequest
             'description' => $this->getDescription(),
             'return_url' => $this->getReturnUrl(),
             'transactionId' => $this->getTransactionId(),
+            'transfers' => $this->getTransfers(),
         ];
     }
 
@@ -49,6 +50,7 @@ class PurchaseRequest extends AbstractRequest
                 'metadata' => [
                     'transactionId' => $data['transactionId'],
                 ],
+                'transfers' => $data['transfers'],
             ], $this->makeIdempotencyKey());
 
             return $this->response = new PurchaseResponse($this, $paymentResponse);
@@ -59,6 +61,11 @@ class PurchaseRequest extends AbstractRequest
 
     private function makeIdempotencyKey(): string
     {
-        return md5(implode(',', array_merge(['create'], $this->getData())));
+        $data = $this->getData();
+        if (isset($data['transfers'])) {
+            $data['transfers'] = json_encode($data['transfers']);
+        }
+
+        return md5(implode(',', array_merge(['create'], $data)));
     }
 }
