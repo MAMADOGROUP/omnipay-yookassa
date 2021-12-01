@@ -11,6 +11,7 @@
 namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\YooKassa\ItemInterface;
 use Throwable;
 
 /**
@@ -22,7 +23,7 @@ class PurchaseRequest extends AbstractRequest
 {
     public function getData()
     {
-        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description', 'transfers');
+        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description', 'items', 'customer');
 
         return [
             'amount' => $this->getAmount(),
@@ -30,7 +31,8 @@ class PurchaseRequest extends AbstractRequest
             'description' => $this->getDescription(),
             'return_url' => $this->getReturnUrl(),
             'transactionId' => $this->getTransactionId(),
-            'transfers' => $this->getTransfers(),
+            'items' => $this->getItems(),
+            'customer' => $this->getCustomer(),
         ];
     }
 
@@ -50,7 +52,26 @@ class PurchaseRequest extends AbstractRequest
                 'metadata' => [
                     'transactionId' => $data['transactionId'],
                 ],
-                'transfers' => $data['transfers'],
+                'receipt' => [
+                    'customer' => [
+                        'full_name' => $data['customer']->getFullName(),
+                        'phone' => $data['customer']->getPhone(),
+                        'email' => $data['customer']->getEmail(),
+                    ],
+                    'items' => array_map(function (ItemInterface $item) {
+                        return [
+                            'description' => $item->getDescription(),
+                            'quantity' => $item->getQuantity(),
+                            'amount' => [
+                                'value' => round($item->getPrice(), 2),
+                                'currency' => 'RUB',
+                            ],
+                            'vat_code' => $item->getVatCode(),
+                            'payment_mode' => $item->getPaymentMode(),
+                            'payment_subject' => $item->getPaymentSubject(),
+                        ];
+                    }, $data['items']->all()),
+                ],
             ], $this->makeIdempotencyKey());
 
             return $this->response = new PurchaseResponse($this, $paymentResponse);
@@ -62,8 +83,11 @@ class PurchaseRequest extends AbstractRequest
     private function makeIdempotencyKey(): string
     {
         $data = $this->getData();
-        if (isset($data['transfers'])) {
-            $data['transfers'] = json_encode($data['transfers']);
+        if (isset($data['items'])) {
+            $data['items'] = json_encode($data['items']);
+        }
+        if (isset($data['customer'])) {
+            $data['customer'] = json_encode($data['customer']);
         }
 
         return md5(implode(',', array_merge(['create'], $data)));
