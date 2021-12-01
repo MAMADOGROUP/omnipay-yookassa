@@ -10,7 +10,9 @@
 
 namespace Omnipay\YooKassa\Message;
 
-use Omnipay\Common\PaymentInterface;
+use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\YooKassa\CustomerInterface;
+use Omnipay\YooKassa\PaymentInterface;
 use YooKassa\Client;
 
 /**
@@ -45,37 +47,46 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('secret', $value);
     }
 
-    public function getTransfers()
+    public function getCustomer(): CustomerInterface
     {
-        return $this->getParameter('transfers');
+        return $this->getParameter('customer');
     }
 
-    public function setTransfers($value)
+    public function setCustomer($value)
     {
-        return $this->setParameter('transfers', $value);
+        if (!$value instanceof CustomerInterface) {
+            throw new InvalidRequestException('Only CustomerInterface is supported');
+        }
+
+        return $this->setParameter('customer', $value);
     }
 
-    public function setYooKassaClient(Client $client): void
+    public function getPayment(): PaymentInterface
     {
-        $this->client = $client;
+        return $this->getParameter('payment');
     }
 
-    /**
-     * @param PaymentInterface $payment
-     * @return \Omnipay\Common\Message\AbstractRequest
-     */
-    public function injectPayment(PaymentInterface $payment)
+    public function setPayment($payment)
     {
+        if (!$payment instanceof PaymentInterface) {
+            throw new InvalidRequestException('Only PaymentInterface is supported');
+        }
+
         $this
-            ->setPayment($payment)
             ->setAmount($payment->getAmount())
             ->setCurrency($payment->getCurrency())
             ->setDescription($payment->getDescription())
             ->setReturnUrl($payment->getReturnUrl())
             ->setTransactionId($payment->getTransactionId())
             ->setTransactionReference($payment->getTransactionReference())
-            ->setTransfers($payment->getTransfers());
+            ->setItems($payment->getItems())
+            ->setCustomer($payment->getCustomer());
 
-        return $this;
+        return $this->setParameter('payment', $payment);
+    }
+
+    public function setYooKassaClient(Client $client): void
+    {
+        $this->client = $client;
     }
 }
