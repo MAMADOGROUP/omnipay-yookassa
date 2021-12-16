@@ -10,10 +10,9 @@
 
 namespace Omnipay\YooKassa\Message;
 
-use Omnipay\Common\PaymentInterface;
-use YooKassaCheckout\Client;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\YooKassa\CustomerInterface;
+use YooKassaCheckout\Client;
 
 /**
  * Class AbstractRequest.
@@ -69,30 +68,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         }
 
         return $this->setParameter('customer', $value);
-    }
-
-    public function getPayment(): PaymentInterface
-    {
-        return $this->getParameter('payment');
-    }
-
-    public function setPayment($payment)
-    {
-        if (!$payment instanceof PaymentInterface) {
-            throw new InvalidRequestException('Only PaymentInterface is supported');
-        }
-
-        $this
-            ->setAmount($payment->getAmount())
-            ->setCurrency($payment->getCurrency())
-            ->setDescription($payment->getDescription())
-            ->setReturnUrl($payment->getReturnUrl())
-            ->setTransactionId($payment->getTransactionId())
-            ->setTransactionReference($payment->getTransactionReference())
-            ->setItems($payment->getItems())
-            ->setCustomer($payment->getCustomer());
-
-        return $this->setParameter('payment', $payment);
     }
 
     public function setYooKassaClient(Client $client): void
