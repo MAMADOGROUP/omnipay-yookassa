@@ -4,9 +4,9 @@ namespace Omnipay\YooKassa;
 
 interface CustomerInterface
 {
-    public function getFullName();
+    public function getYooKassaFullName();
 
-    public function getPhone();
+    public function getYooKassaPhone();
 
-    public function getEmail();
+    public function getYooKassaEmail();
 }

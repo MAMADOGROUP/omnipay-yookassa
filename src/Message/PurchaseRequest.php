@@ -54,9 +54,9 @@ class PurchaseRequest extends AbstractRequest
                 ],
                 'receipt' => [
                     'customer' => [
-                        'full_name' => $data['customer']->getFullName(),
-                        'phone' => $data['customer']->getPhone(),
-                        'email' => $data['customer']->getEmail(),
+                        'full_name' => $data['customer']->getYooKassaFullName(),
+                        'phone' => $data['customer']->getYooKassaPhone(),
+                        'email' => $data['customer']->getYooKassaEmail(),
                     ],
                     'items' => array_map(function (ItemInterface $item) {
                         return [
