@@ -11,7 +11,6 @@
 namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\YooKassa\CustomerInterface;
 use YooKassaCheckout\Client;
 
 /**
@@ -56,17 +55,13 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('transfers', $value);
     }
 
-    public function getCustomer(): CustomerInterface
+    public function getCustomer()
     {
         return $this->getParameter('customer');
     }
 
     public function setCustomer($value)
     {
-        if (!$value instanceof CustomerInterface) {
-            throw new InvalidRequestException('Only CustomerInterface is supported');
-        }
-
         return $this->setParameter('customer', $value);
     }
 

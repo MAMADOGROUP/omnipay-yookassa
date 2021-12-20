@@ -53,11 +53,7 @@ class PurchaseRequest extends AbstractRequest
                     'transactionId' => $data['transactionId'],
                 ],
                 'receipt' => [
-                    'customer' => [
-                        'full_name' => $data['customer']->getYooKassaFullName(),
-                        'phone' => $data['customer']->getYooKassaPhone(),
-                        'email' => $data['customer']->getYooKassaEmail(),
-                    ],
+                    'customer' => $data['customer'],
                     'items' => array_map(function (ItemInterface $item) {
                         return [
                             'description' => $item->getDescription(),
