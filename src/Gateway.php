@@ -114,7 +114,7 @@ class Gateway extends AbstractGateway
      */
     public function acceptNotification(array $parameters = [])
     {
-        return $this->createRequest(NotificationRequest::class, parameters);
+        return $this->createRequest(NotificationRequest::class, $parameters);
     }
 
     private function injectYooKassaClient(array $parameters): array
