@@ -31,6 +31,7 @@ class PurchaseRequest extends AbstractRequest
             'description' => $this->getDescription(),
             'return_url' => $this->getReturnUrl(),
             'transactionId' => $this->getTransactionId(),
+            'refundable' => true,
             'items' => $this->getItems(),
             'customer' => $this->getCustomer(),
         ];
