@@ -11,7 +11,7 @@
 namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
-use YooKassaCheckout\Client;
+use YooKassa\Client;
 
 /**
  * Class AbstractRequest.
