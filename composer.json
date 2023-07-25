@@ -1,7 +1,7 @@
 {
     "name": "igor-tv/omnipay-yookassa",
     "type": "library",
-    "description": "YooKassa driver for Omnipay payment processing library",
+    "description": "src driver for Omnipay payment processing library",
     "keywords": [
         "php",
         "omnipay",
