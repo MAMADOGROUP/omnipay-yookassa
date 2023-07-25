@@ -11,7 +11,7 @@
 namespace Omnipay\YooKassa\Tests\Message;
 
 use Omnipay\YooKassa\Message\AbstractRequest;
-use YooKassaCheckout\Client;
+use YooKassa\Client;
 
 class TestCase extends \Omnipay\Tests\TestCase
 {
